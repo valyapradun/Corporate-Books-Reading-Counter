@@ -3,6 +3,7 @@ package com.epam.library.dao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,23 +32,22 @@ public class EmployeeBookDao {
 			int ignoredEmployeeId = result.getInt(ID);   // one user with no Book relations
 			int randomEmployeeId; 
 			int randomBookId;
-			String  BatchInsertQuery = "INSERT INTO `library`.`employee_book` (`BOOK_ID`, `EMPLOYEE_ID`) VALUES ";
+			String  BatchInsertQuery = "INSERT INTO `library`.`employee_book` (`BOOK_ID`, `EMPLOYEE_ID`) VALUES (?, ?)";
+			PreparedStatement pStatement = connection.prepareStatement(BatchInsertQuery);
 			for (int i = 0; i < numberRowRandom; i++){
 				result = statement.executeQuery("SELECT * FROM employee WHERE ID <> "+ ignoredEmployeeId + " ORDER BY RAND() LIMIT 1");
 				result.next();
 				randomEmployeeId = result.getInt(ID);
+				pStatement.setInt(1, randomEmployeeId);
 	                
 				result = statement.executeQuery("SELECT * FROM book ORDER BY RAND() LIMIT 1");
 				result.next();
 				randomBookId = result.getInt(ID);
-	               
-				BatchInsertQuery += "(" + randomBookId + "," + randomEmployeeId + ")";
-	                
-				if ((i + 1) != numberRowRandom){
-					BatchInsertQuery += ", ";
-				}
+				pStatement.setInt(2, randomBookId);
+	             
+				pStatement.addBatch();
 			}
-			statement.executeUpdate(BatchInsertQuery);
+			statement.executeBatch();
 			resultFill = true;
 		} catch (SQLException e) {
 			throw new ExceptionDao("Library SQL Exception" + e.getMessage() + e);
