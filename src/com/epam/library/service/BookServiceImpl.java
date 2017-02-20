@@ -18,7 +18,7 @@ public class BookServiceImpl implements BookService{
 	public List<Book> viewAllBook() {
 		List<Book> books = null;
 		try {
-			books = dao.getAll();	
+			books = dao.fetchAll();	
 		} catch (ExceptionDao e) {
 			System.out.println(e.getMessage());
 		}
@@ -31,7 +31,7 @@ public class BookServiceImpl implements BookService{
 		Book book = null;
 		if (id > 0){
 			try {
-				book = dao.getById(id);
+				book = dao.fetchById(id);
 			} catch (ExceptionDao e) {
 				System.out.println(e.getMessage());
 			}
