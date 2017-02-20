@@ -16,8 +16,8 @@ public interface BookDao {
 	
 	
 	public boolean create(Book book) throws ExceptionDao;
-	public Book getById(int id) throws ExceptionDao;
-	public List<Book> getAll() throws ExceptionDao;
+	public Book fetchById(int id) throws ExceptionDao;
+	public List<Book> fetchAll() throws ExceptionDao;
 	public boolean updateBookByTitle(String oldtitle, String newtitle) throws ExceptionDao;
 	public boolean delete(int id) throws ExceptionDao;
 	public List<Book> getByTitle(String title) throws ExceptionDao;
